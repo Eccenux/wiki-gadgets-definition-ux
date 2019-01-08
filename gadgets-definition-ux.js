@@ -6,7 +6,7 @@ function processGadgetDefinition(innerHTML) {
 	return innerHTML
 		.replace(/([\w_-]+\.(?:css|js))/g, // link script names
 			"<a href='//en.wiktionary.org/wiki/MediaWiki:Gadget-$1'>$1</a>")
-		.replace(/^(\s*[\w_-]+)/, "$1 ")  // space after gadget name
+		.replace(/^(\s*[\w_-]+)\s*/, "$1 ")  // space after gadget name
 		.replace(/\s*\|\s*/g, " | "); // spaces around pipes
 }
 
