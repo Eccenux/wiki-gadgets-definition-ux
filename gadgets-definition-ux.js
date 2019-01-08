@@ -1,22 +1,25 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
-// Link the names of the JavaScript and CSS pages in [[MediaWiki:Gadgets-definition]].
-function linkifyGadgetDefinition(innerHTML) {
-	return innerHTML.replace(/([\w_-]+\.(?:css|js))/g,
-		"<a href='//en.wiktionary.org/wiki/MediaWiki:Gadget-$1'>$1</a>");
+// Prettify gadget definitions in [[MediaWiki:Gadgets-definition]].
+function processGadgetDefinition(innerHTML) {
+	return innerHTML
+		.replace(/([\w_-]+\.(?:css|js))/g, // link script names
+			"<a href='//en.wiktionary.org/wiki/MediaWiki:Gadget-$1'>$1</a>")
+		.replace(/^(\s*[\w_-]+)/, "$1 ")  // space after gadget name
+		.replace(/\s*\|\s*/g, " | "); // spaces around pipes
 }
 
 var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-content-text");
 
 // Handle gadget definitions in lists.
 $gadgetsDefinitionContent.find("li").each(function (i, element) {
-	element.innerHTML = linkifyGadgetDefinition(element.innerHTML);
+	element.innerHTML = processGadgetDefinition(element.innerHTML);
 });
 
 // Handle gadget definitions in pre tags.
 $gadgetsDefinitionContent.find("pre").each(function (i, element) {
-	element.innerHTML = element.innerHTML.replace(/[^\n]+/g, linkifyGadgetDefinition);
+	element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
 });
 
 })();
