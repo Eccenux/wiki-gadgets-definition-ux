@@ -1,7 +1,11 @@
+/*
+ * Prettify gadget definitions in [[MediaWiki:Gadgets-definition]] by adding
+ * whitespace.
+ */
+
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
-// Prettify gadget definitions in [[MediaWiki:Gadgets-definition]].
 function processGadgetDefinition(innerHTML) {
 	return innerHTML
 		.replace(/([\w_-]+\.(?:css|js))/g, // link script names
