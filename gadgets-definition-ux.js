@@ -7,13 +7,15 @@ function linkifyGadgetDefinition(innerHTML) {
 		"<a href='//en.wiktionary.org/wiki/MediaWiki:Gadget-$1'>$1</a>");
 }
 
+var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-content-text");
+
 // Handle gadget definitions in lists.
-$('.page-MediaWiki_Gadgets-definition #mw-content-text li').each(function (i, element) {
+$gadgetsDefinitionContent.find("li").each(function (i, element) {
 	element.innerHTML = linkifyGadgetDefinition(element.innerHTML);
 });
 
 // Handle gadget definitions in pre tags.
-$('.page-MediaWiki_Gadgets-definition #mw-content-text pre').each(function (i, element) {
+$gadgetsDefinitionContent.find("pre").each(function (i, element) {
 	element.innerHTML = element.innerHTML.replace(/[^\n]+/g, linkifyGadgetDefinition);
 });
 
