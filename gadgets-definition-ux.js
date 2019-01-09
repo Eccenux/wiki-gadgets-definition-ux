@@ -1,6 +1,6 @@
 /*
- * Prettify gadget definitions in [[MediaWiki:Gadgets-definition]] by adding
- * whitespace.
+ * Add links to gadget definitions in [[MediaWiki:Gadgets-definition]] and
+ * prettify them by adding whitespace.
  */
 
 (function gadgetsDefinitionIIFE () {
