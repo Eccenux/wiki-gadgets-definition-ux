@@ -6,8 +6,9 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
+var articlePath = mw.config.get('wgArticlePath');
 function makeWikilink(page, text) {
-	return '<a href="//en.wiktionary.org/wiki/' + page + '">' + (text || page) + '</a>';
+	return '<a href="' + articlePath.replace('$1', page) + '">' + (text || page) + '</a>';
 }
 
 function processGadgetDefinition(innerHTML) {
