@@ -18,7 +18,7 @@ function processGadgetDefinition(innerHTML) {
 			})
 		.replace(/^(\s*)([\w_-]+)\s*/,  // space after gadget name
 			function (wholeMatch, whitespace, gadgetName) {
-				return whitespace + makeWikilink("MediaWiki:Gadget-" + gadgetName);
+				return whitespace + makeWikilink("MediaWiki:Gadget-" + gadgetName, gadgetName);
 			})
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		.replace(/dependencies\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
