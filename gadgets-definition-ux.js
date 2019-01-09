@@ -16,7 +16,7 @@ function processGadgetDefinition(innerHTML) {
 			function (scriptFile) {
 				return makeWikilink("MediaWiki:Gadget-" + scriptFile, scriptFile);
 			})
-		.replace(/^(\s*)([\w_-]+)\s*/,  // space after gadget name
+		.replace(/^(\s*)([\w_-]+)\s*/,  // link gadget name to system message page and add space after it
 			function (wholeMatch, whitespace, gadgetName) {
 				return whitespace
 					+ makeWikilink("MediaWiki:Gadget-" + gadgetName, gadgetName)
