@@ -6,11 +6,20 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
+function makeWikilink(page, text) {
+	return '<a href="//en.wiktionary.org/wiki/' + page + '">' + (text || page) + '</a>';
+}
+
 function processGadgetDefinition(innerHTML) {
 	return innerHTML
 		.replace(/([\w_-]+\.(?:css|js))/g, // link script names
-			"<a href='//en.wiktionary.org/wiki/MediaWiki:Gadget-$1'>$1</a>")
-		.replace(/^(\s*[\w_-]+)\s*/, "$1 ")  // space after gadget name
+			function (scriptFile) {
+				return makeWikilink("MediaWiki:Gadget-" + scriptFile, scriptFile);
+			})
+		.replace(/^(\s*)([\w_-]+)\s*/,  // space after gadget name
+			function (wholeMatch, whitespace, gadgetName) {
+				return whitespace + makeWikilink("MediaWiki:Gadget-" + gadgetName);
+			})
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		.replace(/dependencies\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
 			function (wholeMatch, dependencies) {
