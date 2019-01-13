@@ -45,7 +45,7 @@ function processGadgetDefinition(innerHTML) {
 					+ dependencies.split(/\s*,\s*/g).map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
-							link.href = mw.util.getUrl("MediaWiki:Gadget-" + match[1]);
+							link.href = mw.util.getUrl("#" + match[1]);
 							link.text = dependency;
 							return link.outerHTML;
 						} else {
