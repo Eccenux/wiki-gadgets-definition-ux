@@ -11,6 +11,7 @@ if (![ "view", "edit", "submit" ].includes(mw.config.get("wgAction")))
 	return;
 
 mw.loader.using("mediawiki.util", function () {
+mw.util.addCSS("li:target { border: solid 1px lightgreen; background-color: #eee; }");
 
 // Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
 var link = document.createElement("a");
