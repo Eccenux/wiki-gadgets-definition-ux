@@ -6,12 +6,18 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
+// Avoid mangling history page.
 if (![ "view", "edit", "submit" ].includes(mw.config.get("wgAction")))
 	return;
 
-var articlePath = mw.config.get('wgArticlePath');
+mw.loader.using("mediawiki.util", function () {
+
+var articlePath = mw.config.get("wgArticlePath");
+var link = document.createElement("a");
 function makeWikilink(page, text) {
-	return '<a href="' + articlePath.replace('$1', page) + '">' + (text || page) + '</a>';
+	link.href = mw.util.getUrl(page);
+	link.textContent = text || page;
+	return link.outerHTML;
 }
 
 function processGadgetDefinition(innerHTML) {
@@ -44,6 +50,8 @@ $gadgetsDefinitionContent.find("li").each(function (i, element) {
 // Handle gadget definitions in pre tags.
 $gadgetsDefinitionContent.find("pre").each(function (i, element) {
 	element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
+});
+	
 });
 
 })();
