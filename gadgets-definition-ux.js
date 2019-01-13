@@ -6,8 +6,8 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
-// Avoid mangling history page.
-if (![ "view", "edit", "submit" ].includes(mw.config.get("wgAction")))
+// Avoid mangling history page or making editor uneditable.
+if (![ "view" ].includes(mw.config.get("wgAction")))
 	return;
 
 mw.loader.using("mediawiki.util", function () {
