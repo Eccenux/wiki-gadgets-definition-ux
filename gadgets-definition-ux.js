@@ -44,10 +44,13 @@ function processGadgetDefinition(innerHTML) {
 				return makeWikilink("MediaWiki:Gadget-" + scriptFile, scriptFile);
 			})
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
-		.replace(/dependencies\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
-			function (wholeMatch, dependencies) {
-				return "dependencies = "
-					+ dependencies.split(/\s*,\s*/g).map(function (dependency) {
+		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
+			function (wholeMatch, key, value) {
+				// Manual:User_rights#List_of_permissions
+				var splitValue = value.split(/\s*,\s*/g);
+				var newValue;
+				if (key === "dependencies") {
+					splitValue = splitValue.map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
 							link.href = "#" + makeGadgetId(match[1]);
@@ -59,7 +62,11 @@ function processGadgetDefinition(innerHTML) {
 							return link.outerHTML;
 						}
 						return dependency;
-					}).join(", ");
+					});
+				} else if (key === "rights") {
+					key = mw.util.getUrl("mw:Manual:User_rights#List_of_permissions");
+				}
+				return key + " = " + splitValue.join(", ");
 			});
 }
 
