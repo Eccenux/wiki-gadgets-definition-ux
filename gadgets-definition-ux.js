@@ -46,7 +46,11 @@ function processGadgetDefinition(innerHTML) {
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
 			function (wholeMatch, key, value) {
-				var splitValue = value.split(/\s*,\s*/g), newValue;
+				var regex = /\s*,\s*/g;
+				if (!(key === "dependencies" || key === "rights" || key === "skins"))
+					return wholeMatch.replace(regex, ", ");
+				
+				var splitValue = value.split(regex), newValue;
 				if (key === "dependencies") {
 					splitValue = splitValue.map(function (dependency) {
 						var match;
@@ -65,6 +69,16 @@ function processGadgetDefinition(innerHTML) {
 					link.href = mw.util.getUrl("mw:Manual:User_rights#List_of_permissions");
 					link.text = "rights";
 					key = link.outerHTML;
+				} else if (key === "skins") {
+					var skinNames = mw.config.get('wgAvailableSkins');
+					splitValue = splitValue.map(function (skin) {
+						if (skinNames[skin]) {
+							link.href = mw.util.getUrl("mw:Skin:" + skinNames[skin]);
+							link.text = skin;
+							return link.outerHTML;
+						}
+						return skin;
+					});
 				}
 				return key + " = " + splitValue.join(", ");
 			});
