@@ -62,7 +62,7 @@ var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-conten
 
 // Process gadget definitions in lists.
 $gadgetsDefinitionContent.find("li").each(function (i, element) {
-	gadgetName = getGadgetName(element.innerHTML);
+	var gadgetName = getGadgetName(element.innerHTML);
 	element.innerHTML = processGadgetDefinition(element.innerHTML);
 	if (gadgetName)
 		element.id = "Gadget-" + gadgetName;
