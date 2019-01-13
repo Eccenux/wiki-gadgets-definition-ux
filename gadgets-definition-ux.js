@@ -48,7 +48,7 @@ function processGadgetDefinition(innerHTML) {
 			function (wholeMatch, key, value) {
 				var regex = /\s*,\s*/g;
 				if (!(key === "dependencies" || key === "rights" || key === "skins"))
-					return wholeMatch.replace(regex, ", ");
+					return key + " = " + value.replace(regex, ", ");
 				
 				var splitValue = value.split(regex), newValue;
 				if (key === "dependencies") {
