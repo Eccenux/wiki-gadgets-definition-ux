@@ -46,9 +46,7 @@ function processGadgetDefinition(innerHTML) {
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
 			function (wholeMatch, key, value) {
-				// Manual:User_rights#List_of_permissions
-				var splitValue = value.split(/\s*,\s*/g);
-				var newValue;
+				var splitValue = value.split(/\s*,\s*/g), newValue;
 				if (key === "dependencies") {
 					splitValue = splitValue.map(function (dependency) {
 						var match;
@@ -64,7 +62,9 @@ function processGadgetDefinition(innerHTML) {
 						return dependency;
 					});
 				} else if (key === "rights") {
-					key = mw.util.getUrl("mw:Manual:User_rights#List_of_permissions");
+					link.href = mw.util.getUrl("mw:Manual:User_rights#List_of_permissions");
+					link.text = "rights";
+					key = link.outerHTML;
 				}
 				return key + " = " + splitValue.join(", ");
 			});
