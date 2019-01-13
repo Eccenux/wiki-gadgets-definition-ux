@@ -12,7 +12,7 @@ if (![ "view", "edit", "submit" ].includes(mw.config.get("wgAction")))
 
 mw.loader.using("mediawiki.util", function () {
 
-var articlePath = mw.config.get("wgArticlePath");
+// Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
 var link = document.createElement("a");
 function makeWikilink(page, text) {
 	link.href = mw.util.getUrl(page);
