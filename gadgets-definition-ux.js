@@ -7,7 +7,7 @@
 "use strict";
 
 // Avoid mangling history page or making editor uneditable.
-if (![ "view" ].includes(mw.config.get("wgAction")))
+if (mw.config.get("wgAction") !== "view")
 	return;
 
 mw.loader.using("mediawiki.util", function () {
