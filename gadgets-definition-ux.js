@@ -26,6 +26,10 @@ function getGadgetName(innerHTML) {
 	return match ? match[2] : null;
 }
 
+function makeGadgetId(gadgetName) {
+	return "Gadget-" + gadgetName;
+}
+
 function processGadgetDefinition(innerHTML) {
 	return innerHTML
 		.replace(gadgetNameRegex,  // link gadget name to system message page and add space after it
@@ -45,7 +49,7 @@ function processGadgetDefinition(innerHTML) {
 					+ dependencies.split(/\s*,\s*/g).map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
-							link.href = "#" + match[1];
+							link.href = "#" + makeGadgetId(match[1]);
 							link.text = dependency;
 							return link.outerHTML;
 						} else {
@@ -65,7 +69,7 @@ $gadgetsDefinitionContent.find("li").each(function (i, element) {
 	var gadgetName = getGadgetName(element.innerHTML);
 	element.innerHTML = processGadgetDefinition(element.innerHTML);
 	if (gadgetName)
-		element.id = "Gadget-" + gadgetName;
+		element.id = makeGadgetId(gadgetName);
 });
 
 // Process gadget definitions in pre tags.
