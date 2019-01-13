@@ -6,6 +6,9 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
+if (![ "view", "edit", "submit" ].includes(mw.config.get("wgAction")))
+	return;
+
 var articlePath = mw.config.get('wgArticlePath');
 function makeWikilink(page, text) {
 	return '<a href="' + articlePath.replace('$1', page) + '">' + (text || page) + '</a>';
