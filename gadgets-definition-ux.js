@@ -25,6 +25,12 @@ function linkGadgetSource(sourcePage) {
 	return makeWikilink("MediaWiki:Gadget-" + sourcePage, sourcePage);
 }
 
+function linkGadgetAnchor(gadgetName, text) {
+	link.href = "#" + makeGadgetId(gadgetName);
+	link.textContent = text || gadgetName;
+	return link.outerHTML;
+}
+
 var gadgetNameRegex = /^(\s*)([\w_-]+)\s*/;
 function getGadgetName(innerHTML) {
 	var match = gadgetNameRegex.exec(innerHTML);
@@ -56,9 +62,7 @@ function processGadgetDefinition(innerHTML) {
 					splitValue = splitValue.map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
-							link.href = "#" + makeGadgetId(match[1]);
-							link.text = dependency;
-							return link.outerHTML;
+							return linkGadgetAnchor(match[1], dependency);
 						} else {
 							link.href = mw.util.getUrl("mw:ResourceLoader/Core modules#" + dependency);
 							link.text = dependency;
@@ -81,7 +85,7 @@ function processGadgetDefinition(innerHTML) {
 						return skin;
 					});
 				} else if (key === "peers") {
-					splitValue = splitValue.map(linkGadgetSource);
+					splitValue = splitValue.map(linkGadgetAnchor);
 				}
 				return key + " = " + splitValue.join(", ");
 			});
