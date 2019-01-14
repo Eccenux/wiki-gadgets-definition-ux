@@ -64,23 +64,17 @@ function processGadgetDefinition(innerHTML) {
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
 							return linkGadgetAnchor(match[1], dependency);
 						} else {
-							link.href = mw.util.getUrl("mw:ResourceLoader/Core modules#" + dependency);
-							link.text = dependency;
-							return link.outerHTML;
+							return makeWikilink("mw:ResourceLoader/Core modules#" + dependency, dependency);
 						}
 						return dependency;
 					});
 				} else if (key === "rights") {
-					link.href = mw.util.getUrl("mw:Manual:User_rights#List_of_permissions");
-					link.text = "rights";
-					key = link.outerHTML;
+					key = makeWikilink("mw:Manual:User_rights#List_of_permissions", "rights");
 				} else if (key === "skins") {
 					var skinNames = mw.config.get('wgAvailableSkins');
 					splitValue = splitValue.map(function (skin) {
 						if (skinNames[skin]) {
-							link.href = mw.util.getUrl("mw:Skin:" + skinNames[skin]);
-							link.text = skin;
-							return link.outerHTML;
+							return makeWikilink("mw:Skin:" + skinNames[skin], skin);
 						}
 						return skin;
 					});
