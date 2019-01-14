@@ -15,10 +15,13 @@ mw.util.addCSS("li:target { border: solid 1px lightgreen; background-color: #eee
 
 // Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
 var link = document.createElement("a");
-function makeWikilink(page, text) {
-	link.href = mw.util.getUrl(page);
-	link.textContent = text || page;
+function makeLink(href, text) {
+	link.href = href;
+	link.textContent = text;
 	return link.outerHTML;
+}
+function makeWikilink(page, text) {
+	return makeLink(mw.util.getUrl(page), text || page);
 }
 
 function linkGadgetSource(sourcePage) {
@@ -26,9 +29,7 @@ function linkGadgetSource(sourcePage) {
 }
 
 function linkGadgetAnchor(gadgetName, text) {
-	link.href = "#" + makeGadgetId(gadgetName);
-	link.textContent = text || gadgetName;
-	return link.outerHTML;
+	return makeLink("#" + makeGadgetId(gadgetName), text || gadgetName);
 }
 
 var gadgetNameRegex = /^(\s*)([\w_-]+)\s*/;
