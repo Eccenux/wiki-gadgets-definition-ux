@@ -47,11 +47,11 @@ function processGadgetDefinition(innerHTML) {
 		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
 			function (wholeMatch, key, value) {
 				var regex = /\s*,\s*/g;
-				if (!(key === "dependencies" || key === "rights" || key === "skins"))
+				if (!(key === "dependencies" || key === "rights" || key === "skins" || key === "peers"))
 					return key + " = " + value.replace(regex, ", ");
 				
 				var splitValue = value.split(regex), newValue;
-				if (key === "dependencies") {
+				if (key === "dependencies" || key === "peers") {
 					splitValue = splitValue.map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
