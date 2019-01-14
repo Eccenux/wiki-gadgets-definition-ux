@@ -21,6 +21,10 @@ function makeWikilink(page, text) {
 	return link.outerHTML;
 }
 
+function linkGadgetSource(sourcePage) {
+	return makeWikilink("MediaWiki:Gadget-" + sourcePage, sourcePage);
+}
+
 var gadgetNameRegex = /^(\s*)([\w_-]+)\s*/;
 function getGadgetName(innerHTML) {
 	var match = gadgetNameRegex.exec(innerHTML);
@@ -36,13 +40,10 @@ function processGadgetDefinition(innerHTML) {
 		.replace(gadgetNameRegex,  // link gadget name to system message page and add space after it
 			function (wholeMatch, whitespace, gadgetName) {
 				return whitespace
-					+ makeWikilink("MediaWiki:Gadget-" + gadgetName, gadgetName)
+					+ linkGadgetSource(gadgetName)
 					+ " ";
 			})
-		.replace(/([\w_-]+\.(?:css|js))/g, // link script names
-			function (scriptFile) {
-				return makeWikilink("MediaWiki:Gadget-" + scriptFile, scriptFile);
-			})
+		.replace(/([\w_-]+\.(?:css|js))/g, linkGadgetSource) // link script names
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
 			function (wholeMatch, key, value) {
@@ -51,7 +52,7 @@ function processGadgetDefinition(innerHTML) {
 					return key + " = " + value.replace(regex, ", ");
 				
 				var splitValue = value.split(regex), newValue;
-				if (key === "dependencies" || key === "peers") {
+				if (key === "dependencies") {
 					splitValue = splitValue.map(function (dependency) {
 						var match;
 						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
@@ -79,6 +80,8 @@ function processGadgetDefinition(innerHTML) {
 						}
 						return skin;
 					});
+				} else if (key === "peers") {
+					splitValue = splitValue.map(linkGadgetSource);
 				}
 				return key + " = " + splitValue.join(", ");
 			});
