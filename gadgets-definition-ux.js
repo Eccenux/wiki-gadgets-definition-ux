@@ -6,6 +6,9 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
+if (mw.config.get("wgPageName") !== "MediaWiki:Gadgets-definition")
+	return;
+
 // Avoid mangling history page or making editor uneditable.
 if (mw.config.get("wgAction") !== "view")
 	return;
