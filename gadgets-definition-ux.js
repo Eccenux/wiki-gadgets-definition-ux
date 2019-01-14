@@ -90,10 +90,9 @@ function processGadgetDefinition(innerHTML) {
 				} else if (key === "skins") {
 					var skinNames = mw.config.get('wgAvailableSkins');
 					splitValue = splitValue.map(function (skin) {
-						if (skinNames[skin]) {
-							return makeWikilink("mw:Skin:" + skinNames[skin], skin);
-						}
-						return skin;
+						return skinNames[skin]
+							? makeWikilink("mw:Skin:" + skinNames[skin], skin)
+							: skin;
 					});
 				} else if (key === "peers") {
 					splitValue = splitValue.map(linkGadgetAnchor);
