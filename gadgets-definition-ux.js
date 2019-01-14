@@ -51,7 +51,24 @@ function processGadgetDefinition(innerHTML) {
 			})
 		.replace(/([\w_-]+\.(?:css|js))/g, linkGadgetSource) // link script names
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
-		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g, // spaces around commas in dependencies
+		
+		/*
+		 * process options
+		 *
+		 * Link dependencies: ext.gadget.name to entry on this page, others to
+		 * [[mw:ResourceLoader/Core modules]] (even though not all have an entry
+		 * there).
+		 *
+		 * Link peers to entry on this page.
+		 *
+		 * Link rights to [[mw:Manual:User_rights#List_of_permissions]]. There
+		 * are unfortunately no anchors for individual rights.
+		 *
+		 * Link skin names to page in Skin namespace on MediaWiki. This uses
+		 * wgAvailableSkins so will probably fail if the skin has a
+		 * MediaWiki:skinname-<name> page in the local wiki.
+		 */
+		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g,
 			function (wholeMatch, key, value) {
 				var regex = /\s*,\s*/g;
 				if (!(key === "dependencies" || key === "rights" || key === "skins" || key === "peers"))
@@ -69,7 +86,7 @@ function processGadgetDefinition(innerHTML) {
 						return dependency;
 					});
 				} else if (key === "rights") {
-					key = makeWikilink("mw:Manual:User_rights#List_of_permissions", "rights");
+					key = makeWikilink("mw:Manual:User_rights#List_of_permissions", key);
 				} else if (key === "skins") {
 					var skinNames = mw.config.get('wgAvailableSkins');
 					splitValue = splitValue.map(function (skin) {
