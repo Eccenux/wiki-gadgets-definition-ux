@@ -105,7 +105,7 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
-var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-parser-output");
+var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition .mw-parser-output");
 
 // Process gadget definitions in lists.
 $gadgetsDefinitionContent.find("li").each(function (i, element) {
