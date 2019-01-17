@@ -10,7 +10,7 @@ if (mw.config.get("wgPageName") !== "MediaWiki:Gadgets-definition")
 	return;
 
 // Avoid mangling history page or making editor uneditable.
-if (mw.config.get("wgAction") !== "view")
+if ([ "view", "edit", "submit" ].indexOf(mw.config.get("wgAction")) === -1)
 	return;
 
 mw.loader.using("mediawiki.util", function () {
@@ -105,7 +105,7 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
-var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-content-text");
+var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition #mw-parser-output");
 
 // Process gadget definitions in lists.
 $gadgetsDefinitionContent.find("li").each(function (i, element) {
