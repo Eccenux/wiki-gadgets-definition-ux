@@ -1,28 +1,39 @@
 /*
- * Add links to gadget definitions in [[MediaWiki:Gadgets-definition]] and
- * prettify them by adding whitespace.
+ * Adds links to gadget definitions in [[MediaWiki:Gadgets-definition]] and
+ * prettifies them by adding whitespace.
+ * Adds anchors to gadget definitions as well as CSS to highlight them when we
+ * click a link to them.
  */
+
+/* jshint boss: true, esversion: 5, undef: true, unused: true */
+/* globals $, mw */
 
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
-if (mw.config.get("wgPageName") !== "MediaWiki:Gadgets-definition")
-	return;
-
 // Avoid mangling history page or making editor uneditable.
-if ([ "view", "edit", "submit" ].indexOf(mw.config.get("wgAction")) === -1)
+if (mw.config.get("wgPageName") !== "MediaWiki:Gadgets-definition"
+|| [ "view", "edit", "submit" ].indexOf(mw.config.get("wgAction")) === -1)
 	return;
 
 mw.loader.using("mediawiki.util", function () {
-mw.util.addCSS("li:target { border: solid 1px lightgreen; background-color: #eee; }");
+	// Highlight a gadget's definition when we follow a link to it.
+	mw.util.addCSS("li:target { \
+		border: solid 1px lightgreen; \
+		padding: 0.1em 0.3em; \
+		background-color: #eee; \
+	}");
+});
 
 // Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
+// This anchor element is used to generate links and is not attached to the document.
 var link = document.createElement("a");
 function makeLink(href, text) {
 	link.href = href;
 	link.textContent = text;
 	return link.outerHTML;
 }
+
 function makeWikilink(page, text) {
 	return makeLink(mw.util.getUrl(page), text || page);
 }
@@ -47,7 +58,8 @@ function makeGadgetId(gadgetName) {
 
 function processGadgetDefinition(innerHTML) {
 	return innerHTML
-		.replace(gadgetNameRegex,  // link gadget name to system message page and add space after it
+		// link gadget name to system message page and add space after it
+		.replace(gadgetNameRegex,
 			function (wholeMatch, whitespace, gadgetName) {
 				return whitespace
 					+ linkGadgetSource(gadgetName)
@@ -78,16 +90,14 @@ function processGadgetDefinition(innerHTML) {
 				if (!(key === "dependencies" || key === "rights" || key === "skins" || key === "peers"))
 					return key + " = " + value.replace(regex, ", ");
 				
-				var splitValue = value.split(regex), newValue;
+				var splitValue = value.split(regex);
 				if (key === "dependencies") {
 					splitValue = splitValue.map(function (dependency) {
-						var match;
-						if ((match = /^ext\.gadget\.(.+)$/.exec(dependency)) !== null) {
-							return linkGadgetAnchor(match[1], dependency);
-						} else {
+						var gadgetName = /^ext\.gadget\.(.+)$/.exec(dependency);
+						if (gadgetName)
+							return linkGadgetAnchor(gadgetName[1], dependency);
+						else
 							return makeWikilink("mw:ResourceLoader/Core modules#" + dependency, dependency);
-						}
-						return dependency;
 					});
 				} else if (key === "rights") {
 					key = makeWikilink("mw:Manual:User_rights#List_of_permissions", key);
@@ -105,21 +115,24 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
-var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition .mw-parser-output");
-
-// Process gadget definitions in lists.
-$gadgetsDefinitionContent.find("li").each(function (i, element) {
-	var gadgetName = getGadgetName(element.innerHTML);
-	element.innerHTML = processGadgetDefinition(element.innerHTML);
-	if (gadgetName)
-		element.id = makeGadgetId(gadgetName);
-});
-
-// Process gadget definitions in pre tags.
-$gadgetsDefinitionContent.find("pre").each(function (i, element) {
-	element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
-});
+$(function () {
+	var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition .mw-parser-output");
 	
-}); // mw.loader.using
+	// Process gadget definitions in lists.
+	$gadgetsDefinitionContent.find("li").each(function (i, element) {
+		// Add id so that gadget definitions can be highlighted when we click a link
+		// to them.
+		var gadgetName = getGadgetName(element.innerHTML);
+		if (gadgetName)
+			element.id = makeGadgetId(gadgetName);
+		
+		element.innerHTML = processGadgetDefinition(element.innerHTML);
+	});
+	
+	// Process gadget definitions in pre tags.
+	$gadgetsDefinitionContent.find("pre").each(function (i, element) {
+		element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
+	});
+});
 
 })(); // IIFE
