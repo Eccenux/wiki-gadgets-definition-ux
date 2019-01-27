@@ -11,9 +11,9 @@
 (function gadgetsDefinitionIIFE () {
 "use strict";
 
-// Avoid mangling history page or making editor uneditable.
-if (mw.config.get("wgPageName") !== "MediaWiki:Gadgets-definition"
-|| [ "view", "edit", "submit" ].indexOf(mw.config.get("wgAction")) === -1)
+// Only operate on [[MediaWiki:Gadgets-definition]] when the text is visible.
+if (!(mw.config.get("wgPageName") === "MediaWiki:Gadgets-definition"
+&& document.querySelector(".mw-parser-output")))
 	return;
 
 mw.loader.using("mediawiki.util", function () {
@@ -86,40 +86,42 @@ function processGadgetDefinition(innerHTML) {
 		 */
 		.replace(/([a-z]+)\s*=\s*(.+?)(?=\s*[|\]])/g,
 			function (wholeMatch, key, value) {
-				var regex = /\s*,\s*/g;
-				if (!(key === "dependencies" || key === "rights" || key === "skins" || key === "peers"))
-					return key + " = " + value.replace(regex, ", ");
-				
-				var splitValue = value.split(regex);
-				if (key === "dependencies") {
-					splitValue = splitValue.map(function (dependency) {
-						var gadgetName = /^ext\.gadget\.(.+)$/.exec(dependency);
-						if (gadgetName)
-							return linkGadgetAnchor(gadgetName[1], dependency);
-						else
-							return makeWikilink("mw:ResourceLoader/Core modules#" + dependency, dependency);
-					});
-				} else if (key === "rights") {
-					key = makeWikilink("mw:Manual:User_rights#List_of_permissions", key);
-				} else if (key === "skins") {
-					var skinNames = mw.config.get('wgAvailableSkins');
-					splitValue = splitValue.map(function (skin) {
-						return skinNames[skin]
-							? makeWikilink("mw:Skin:" + skinNames[skin], skin)
-							: skin;
-					});
-				} else if (key === "peers") {
-					splitValue = splitValue.map(linkGadgetAnchor);
+				var splitValue = value.split(/\s*,\s*/g);
+				switch (key) {
+					case "dependencies":
+						splitValue = splitValue.map(function (dependency) {
+							var gadgetName = /^ext\.gadget\.(.+)$/.exec(dependency);
+							if (gadgetName)
+								return linkGadgetAnchor(gadgetName[1], dependency);
+							else
+								return makeWikilink("mw:ResourceLoader/Core modules#" + dependency, dependency);
+						});
+						break;
+					case "rights":
+						key = makeWikilink("mw:Manual:User_rights#List_of_permissions", key);
+						break;
+					case "skins": {
+						var skinNames = mw.config.get('wgAvailableSkins');
+						splitValue = splitValue.map(function (skin) {
+							return skinNames[skin]
+								? makeWikilink("mw:Skin:" + skinNames[skin], skin)
+								: skin;
+						});
+						break;
+					}
+					case "peers":
+						splitValue = splitValue.map(linkGadgetAnchor);
+					
 				}
 				return key + " = " + splitValue.join(", ");
 			});
 }
 
 $(function () {
-	var $gadgetsDefinitionContent = $(".page-MediaWiki_Gadgets-definition .mw-parser-output");
+	var $parserOutput = $(".mw-parser-output");
 	
 	// Process gadget definitions in lists.
-	$gadgetsDefinitionContent.find("li").each(function (i, element) {
+	$parserOutput.find("li").each(function (i, element) {
 		// Add id so that gadget definitions can be highlighted when we click a link
 		// to them.
 		var gadgetName = getGadgetName(element.innerHTML);
@@ -130,7 +132,7 @@ $(function () {
 	});
 	
 	// Process gadget definitions in pre tags.
-	$gadgetsDefinitionContent.find("pre").each(function (i, element) {
+	$parserOutput.find("pre").each(function (i, element) {
 		element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
 	});
 });
