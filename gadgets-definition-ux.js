@@ -102,11 +102,13 @@ function processGadgetDefinition(innerHTML) {
 						break;
 					case "skins": {
 						var skinNames = mw.config.get('wgAvailableSkins');
-						splitValue = splitValue.map(function (skin) {
-							return skinNames[skin]
-								? makeWikilink("mw:Skin:" + skinNames[skin], skin)
-								: skin;
-						});
+						if (skinNames) {
+							splitValue = splitValue.map(function (skin) {
+								return skinNames[skin]
+									? makeWikilink("mw:Skin:" + skinNames[skin], skin)
+									: skin;
+							});
+						}
 						break;
 					}
 					case "peers":
