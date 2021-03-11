@@ -5,7 +5,7 @@
  * click a link to them.
  */
 
-/* jshint boss: true, esversion: 5, undef: true, unused: true */
+/* jshint boss: true, undef: true, unused: true */
 /* globals $, mw */
 
 (function gadgetsDefinitionIIFE () {
