@@ -3,6 +3,10 @@
  * prettifies them by adding whitespace.
  * Adds anchors to gadget definitions as well as CSS to highlight them when we
  * click a link to them.
+ *
+ * Can be loaded with the following code:
+mw.loader.load("//en.wiktionary.org/w/index.php?title=User:Erutuon/scripts/gadgets-definition.js&action=raw&ctype=text/javascript");
+ *
  */
 
 /* jshint boss: true, undef: true, unused: true */
