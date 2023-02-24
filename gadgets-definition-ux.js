@@ -70,7 +70,7 @@ function processGadgetDefinition(innerHTML) {
 					+ linkGadgetSource(gadgetName)
 					+ " ";
 			})
-		.replace(/([\w_\-.]+\.(?:css|js))/g, linkGadgetSource) // link script names
+		.replace(/([\w_\-.]+\.(?:css|js(?:on)?))/g, linkGadgetSource) // link script names
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		
 		/*
