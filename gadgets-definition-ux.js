@@ -65,6 +65,7 @@ function processGadgetDefinition(innerHTML) {
 		// link gadget name to system message page and add space after it
 		.replace(gadgetNameRegex,
 			function (wholeMatch, whitespace, gadgetName) {
+				gadgetName = gadgetName.trim();
 				let codeName = gadgetName.replaceAll(' ', '_');
 				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), "⚙️");
 				return whitespace
