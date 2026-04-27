@@ -65,9 +65,12 @@ function processGadgetDefinition(innerHTML) {
 		// link gadget name to system message page and add space after it
 		.replace(gadgetNameRegex,
 			function (wholeMatch, whitespace, gadgetName) {
+				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(gadgetName), "⚙️");
 				return whitespace
 					+ linkGadgetSource(gadgetName)
-					+ " ";
+					+ ` (${prefsUrl})`
+					+ " "
+				;
 			})
 		.replace(/([\w_\-.]+\.(?:css|js(?:on)?))/g, linkGadgetSource) // link script names
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
