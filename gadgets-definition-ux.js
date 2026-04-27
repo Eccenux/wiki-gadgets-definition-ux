@@ -4,9 +4,8 @@
  * Adds anchors to gadget definitions as well as CSS to highlight them when we
  * click a link to them.
  *
- * Can be loaded with the following code:
-mw.loader.load("//en.wiktionary.org/w/index.php?title=User:Erutuon/scripts/gadgets-definition.js&action=raw&ctype=text/javascript");
- *
+ * Source:
+ * https://en.wiktionary.org/w/index.php?title=User:Erutuon/scripts/gadgets-definition.js
  */
 
 /* jshint boss: true, undef: true, unused: true */
@@ -124,9 +123,8 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
-$(function () {
-	var $parserOutput = $(".mw-parser-output");
-	
+// on-ready and on-ajax-load
+mw.hook( 'wikipage.content' ).add( function ( $parserOutput ) {	
 	// Process gadget definitions in lists.
 	$parserOutput.find("li").each(function (i, element) {
 		// Add id so that gadget definitions can be highlighted when we click a link
