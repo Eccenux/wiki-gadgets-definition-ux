@@ -71,7 +71,7 @@ function processGadgetDefinition(innerHTML) {
 				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), "⚙️");
 				return whitespace
 					+ linkGadgetSource(gadgetName)
-					+ isHidden ? '' : ` (${prefsUrl})`
+					+ (isHidden ? '' : ` (${prefsUrl})`)
 					+ " "
 				;
 			})
