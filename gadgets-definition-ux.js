@@ -61,6 +61,7 @@ function makeGadgetId(gadgetName) {
 }
 
 function processGadgetDefinition(innerHTML) {
+	let isHidden = innerHTML.search(/[ |[\]]hidden[ |[\]]/) >= 0;
 	return innerHTML
 		// link gadget name to system message page and add space after it
 		.replace(gadgetNameRegex,
@@ -70,7 +71,7 @@ function processGadgetDefinition(innerHTML) {
 				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), "⚙️");
 				return whitespace
 					+ linkGadgetSource(gadgetName)
-					+ ` (${prefsUrl})`
+					+ isHidden ? '' : ` (${prefsUrl})`
 					+ " "
 				;
 			})
