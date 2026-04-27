@@ -50,7 +50,7 @@ function linkGadgetAnchor(gadgetName, text) {
 	return makeLink("#" + makeGadgetId(gadgetName), text || gadgetName);
 }
 
-var gadgetNameRegex = /^(\s*)([\w_-]+)\s*/;
+var gadgetNameRegex = /^(\s*)([\w_ -]+)\s*/;
 function getGadgetName(innerHTML) {
 	var match = gadgetNameRegex.exec(innerHTML);
 	return match ? match[2] : null;
@@ -65,7 +65,8 @@ function processGadgetDefinition(innerHTML) {
 		// link gadget name to system message page and add space after it
 		.replace(gadgetNameRegex,
 			function (wholeMatch, whitespace, gadgetName) {
-				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(gadgetName), "⚙️");
+				let codeName = gadgetName.replaceAll(' ', '_');
+				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), "⚙️");
 				return whitespace
 					+ linkGadgetSource(gadgetName)
 					+ ` (${prefsUrl})`
