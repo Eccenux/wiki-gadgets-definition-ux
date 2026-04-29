@@ -57,7 +57,7 @@ function getGadgetName(innerHTML) {
 }
 
 function makeGadgetId(gadgetName) {
-	return "Gadget-" + gadgetName;
+	return "Gadget-" + gadgetName.trim();
 }
 
 function processGadgetDefinition(innerHTML) {
