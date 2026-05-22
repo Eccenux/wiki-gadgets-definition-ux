@@ -4,12 +4,12 @@
  * Adds anchors to gadget definitions as well as CSS to highlight them when we
  * click a link to them.
  *
- * Source:
+ * Source (forked in December 2023):
  * https://en.wiktionary.org/w/index.php?title=User:Erutuon/scripts/gadgets-definition.js
+ * 
+ * Common history of changes and source:
+ * https://github.com/Eccenux/wiki-gadgets-definition-ux
  */
-
-/* jshint boss: true, undef: true, unused: true */
-/* globals $, mw */
 
 (function gadgetsDefinitionIIFE () {
 "use strict";
