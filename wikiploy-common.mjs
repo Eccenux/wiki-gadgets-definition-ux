@@ -6,7 +6,7 @@ import { DeployConfig } from 'wikiploy';
  * @param {String} site Domian of a MW site.
  */
 export function addConfig(configs, site, isRelease) {
-	let deploymentName = isRelease ? 'MediaWiki:Gadgets-definition-ux' : '~/gadgets-definition-ux-dev';
+	let deploymentName = isRelease ? 'MediaWiki:Gadgets-definition-ux' : '~/gadgets-definition-ux';
 	configs.push(new DeployConfig({
 		src: 'src/gadgets-definition-ux.js',
 		dst: `${deploymentName}.js`,
