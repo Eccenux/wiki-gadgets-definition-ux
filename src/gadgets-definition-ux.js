@@ -133,6 +133,7 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
+let _ViewFilter = false;
 let listFilter = false;
 let contentReadyForFilter = false;
 function initFilter(parserOutput) {
@@ -144,6 +145,7 @@ function initFilter(parserOutput) {
 	}
 	parserOutput.insertAdjacentHTML("afterbegin", '<div id="gad-def-filter-container">')
 	// init/re-init
+	listFilter = new _ViewFilter();
 	listFilter.init("#gad-def-filter-container", "#mw-content-text li");
 }
 
@@ -173,8 +175,7 @@ mw.hook( 'wikipage.content' ).add( function ( $parserOutput ) {
 });
 
 mw.hook('userjs.ViewFilter.loaded').add(function (ViewFilter) {
-	// define view filter (do this at any time)
-	listFilter = new ViewFilter();
+	_ViewFilter = ViewFilter;
 	if (contentReadyForFilter) {
 		initFilter(contentReadyForFilter);
 	}
