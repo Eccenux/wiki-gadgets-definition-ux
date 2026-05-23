@@ -138,6 +138,10 @@ let contentReadyForFilter = false;
 function initFilter(parserOutput) {
 	// add a container somewhere (in this example prepend to vector-toc)
 	$('#gad-def-filter-container').remove();
+	if (!parserOutput.classList.contains('mw-parser-output')) {
+		let el = parserOutput.querySelector('.mw-parser-output');
+		if (el) parserOutput = el;
+	}
 	parserOutput.insertAdjacentHTML("afterbegin", '<div id="gad-def-filter-container">')
 	// init/re-init
 	listFilter.init("#gad-def-filter-container", "#mw-content-text li");
