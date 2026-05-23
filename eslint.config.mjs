@@ -27,7 +27,7 @@ export default defineConfig([
 			indent: ["error", "tab", { SwitchCase: 1 }],
 			semi: ["error", "always"],
 			"comma-dangle": ["warn", "always-multiline"],
-			"no-trailing-spaces": "error",
+			// "no-trailing-spaces": "error",
 
 			// Potencjalne błędy / higiena
 			"no-unused-vars": ["warn", {

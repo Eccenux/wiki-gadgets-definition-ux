@@ -9,6 +9,18 @@ Adds links to:
 - dependencies;
 - scripts and styles of the gadget.
 
+Additionally you have the ability to:
+
+- filter lists of definitions:
+	- you can find all gadgets using `oojs`
+	- also filter in reverse (e.g. find not `hidden`)
+	- can use regexp for filtering
+	- keeps headers (only hides list)
+- load and filter by actual descriptions:
+	- there is a button to load descriptions
+	- upon click descriptions are added to a page
+	- updates filter so you can find gadget by human-descriptions
+
 ## Table of contents
 
 <!-- TOC -->
