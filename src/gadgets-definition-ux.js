@@ -29,6 +29,10 @@ mw.loader.using("mediawiki.util", function () {
 	}");
 });
 
+if (!window.userNuViewFilterLoaded) {
+	mw.loader.load("https://pl.wikipedia.org/w/index.php?action=raw&ctype=text/javascript&smaxage=21600&maxage=86400&title=Wikipedysta:Nux/ViewFilter.js");
+}
+
 // Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
 // This anchor element is used to generate links and is not attached to the document.
 var link = document.createElement("a");
@@ -129,6 +133,16 @@ function processGadgetDefinition(innerHTML) {
 			});
 }
 
+let listFilter = false;
+let contentReadyForFilter = false;
+function initFilter(parserOutput) {
+	// add a container somewhere (in this example prepend to vector-toc)
+	$('#gad-def-filter-container').remove();
+	parserOutput.insertAdjacentHTML("afterbegin", '<div id="gad-def-filter-container">')
+	// init/re-init
+	listFilter.init("#gad-def-filter-container", "#mw-content-text li");
+}
+
 // on-ready and on-ajax-load
 mw.hook( 'wikipage.content' ).add( function ( $parserOutput ) {	
 	// Process gadget definitions in lists.
@@ -146,6 +160,20 @@ mw.hook( 'wikipage.content' ).add( function ( $parserOutput ) {
 	$parserOutput.find("pre").each(function (i, element) {
 		element.innerHTML = element.innerHTML.replace(/[^\n]+/g, processGadgetDefinition);
 	});
+
+	if (listFilter) {
+		initFilter($parserOutput[0]);
+	} else {
+		contentReadyForFilter = $parserOutput[0];
+	}
+});
+
+mw.hook('userjs.ViewFilter.loaded').add(function (ViewFilter) {
+	// define view filter (do this at any time)
+	listFilter = new ViewFilter();
+	if (contentReadyForFilter) {
+		initFilter(contentReadyForFilter);
+	}
 });
 
 })(); // IIFE
