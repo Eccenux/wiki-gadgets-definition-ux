@@ -20,13 +20,22 @@ if (!(mw.config.get("wgCanonicalNamespace") == "MediaWiki"
 && document.querySelector(".mw-parser-output")))
 	return;
 
+// extra styles
 mw.loader.using("mediawiki.util", function () {
-	// Highlight a gadget's definition when we follow a link to it.
-	mw.util.addCSS("li:target { \
-		border: solid 1px lightgreen; \
-		padding: 0.1em 0.3em; \
-		background-color: #eee; \
-	}");
+	mw.util.addCSS(`
+		#mw-content-text {
+			/* Highlight a gadget's definition when we follow a link to it. */
+			li:target {
+				border: solid 1px lightgreen;
+				padding: 0.1em 0.3em;
+				background-color: #eee;
+			}
+			#gad-def-filter-container {
+				display: flex;
+				gap: .4em;
+			}
+		}
+	`);
 });
 
 if (!window.userNuViewFilterLoaded) {
@@ -137,12 +146,14 @@ let _ViewFilter = false;
 let listFilter = false;
 let contentReadyForFilter = false;
 function initFilter(parserOutput) {
-	// add a container somewhere (in this example prepend to vector-toc)
+	// remove the previous filter
 	$('#gad-def-filter-container').remove();
+	// on preview page parserOutput from wikipage.content is not actually the content
 	if (!parserOutput.classList.contains('mw-parser-output')) {
 		let el = parserOutput.querySelector('.mw-parser-output');
 		if (el) parserOutput = el;
 	}
+	// add just before the content
 	parserOutput.insertAdjacentHTML("afterbegin", '<div id="gad-def-filter-container">')
 	// init/re-init
 	listFilter = new _ViewFilter();
