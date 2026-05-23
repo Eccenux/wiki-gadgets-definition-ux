@@ -228,86 +228,128 @@
 
 		// action(s)
 		let actionBar = document.querySelector("#gad-def-action-container");
-		initLoadAction(actionBar);
-	}
-	// action: load and filter by actual descriptions
-	function initLoadAction(actionBar) {
-		const button = actionBar.insertAdjacentElement(
-			"afterbegin",
-			Object.assign(document.createElement("input"), {
-				type: "button",
-				className: "u-button",
-				value: "Load desc.",
-				title: "Load descriptions of gadgets",
-			}),
-		);
-		button.addEventListener("click",()=>runLoadAction(button));
-	}
-	// load and filter by actual descriptions
-	async function runLoadAction(button) {
-		button.classList.add('loading');
-
-		let gadgets = {}; // title=>{id, li, desc}
-		let list = document.querySelectorAll('li:has(.u-gad-desc-link)');
-		for (let li of list) {
-			let title = li.querySelectorAll('.u-gad-desc-link').href.replace(/.+\/wiki\//, '');
-			gadgets[title] = {
-				title: title,
-				id: li.id,
-				li,
-				desc:'',
-			};
-		}
-
-		const chunkSize = 40;
-		let titles = Object.keys(gadgets);
-		let titleChunks = chunkArray(titles, chunkSize);
-		for (const chunk of titleChunks) {
-			await loadDescToGadgets(chunk, gadgets);
-		}
-
-		// TODO: update filter after load
-
-		button.classList.remove('loading');
+		let descLoader = new DescLoader();
+		descLoader.initAction(actionBar);
 	}
 	/**
 	 * @typedef {Object} GadgetLoadDto
 	 * @property {string} title
 	 * @property {string} id
 	 * @property {HTMLLIElement} li
-	 * @property {string} desc
+	 * @property {string} desc (for cache... maybe)
 	 */
 	/**
-	 * Load desc to a list of gadgets.
-	 * @param {string[]} titles
-	 * @param {Object.<string, GadgetLoadDto>} gadgets
+	 * Load actual descriptions.
+	 * Updates filters.
 	 */
-	async function loadDescToGadgets(titles, gadgets) {
-		const api = new mw.Api();
+	class DescLoader {
+		initAction(actionBar) {
+			const button = actionBar.insertAdjacentElement(
+				"afterbegin",
+				Object.assign(document.createElement("input"), {
+					type: "button",
+					className: "u-button",
+					value: "Load desc.",
+					title: "Load descriptions of gadgets",
+				}),
+			);
+			button.addEventListener("click",()=>this.run(button));
+		}
 
-		let response = await api.get({
-			action: 'query',
-			prop: 'revisions',
-			rvprop: 'content',
-			rvslots: 'main',
-			formatversion: 2,
-			titles: titles.join('|'),
-		});
+		// load and update filter
+		async run(button) {
+			button.classList.add('loading');
 
-		for (let page of response.query.pages) {
-			let title = page.title;
-			let desc = page.revisions?.[0]?.slots?.main?.content;
-			if (title in gadgets) {
-				let gadget = gadgets[title];
-				gadget.li.append(Object.assign(document.createElement("span"), {
-					className: "u-desc",
-					textContent: desc,
-				}));
-			} else {
-				console.warn('Title is missing, different format?', title);
+			try {
+				// load desc
+				let gadgets = await this.readGadgets();
+				await this.loadToGadgets(gadgets);
+
+				// TODO: update filter after load
+
+			} finally {
+				button.classList.remove('loading');
+			}
+		}
+
+		/**
+		 * @private
+		 * @returns {Object.<string, GadgetLoadDto>} gadgets.
+		 */
+		async readGadgets() {
+			let gadgets = {}; // title=>{id, li, desc}
+			try {
+				let list = Array.from(document.querySelectorAll('li:has(.u-gad-desc-link)'));
+				for (let li of list) {
+					let title = li.querySelectorAll('.u-gad-desc-link').href.replace(/.+\/wiki\//, '');
+					gadgets[title] = {
+						title: title,
+						id: li.id,
+						li,
+						desc:'',
+					};
+				}
+
+			} catch (error) {
+				console.error('Failed to process list.', error);
+				return false;
+			}
+			return gadgets;
+		}
+
+		/**
+		 * Load desc to a list of gadgets.
+		 * @private
+		 * @param {string[]} titles
+		 * @param {Object.<string, GadgetLoadDto>} gadgets
+		 */
+		async loadToGadgets(gadgets) {
+			const chunkSize = 40;
+			let titles = Object.keys(gadgets);
+			let titleChunks = chunkArray(titles, chunkSize);
+			for (const chunk of titleChunks) {
+				try {
+					await this.loadChunkToGadgets(chunk, gadgets);
+				} catch (error) {
+					console.error('Failed to load a chunk.', error);
+				}
+			}
+		}
+
+		/**
+		 * Load chunk of desc to a list of gadgets.
+		 * @private
+		 * @param {string[]} titles
+		 * @param {Object.<string, GadgetLoadDto>} gadgets
+		 */
+		async loadChunkToGadgets(titles, gadgets) {
+			const api = new mw.Api();
+
+			let response = await api.get({
+				action: 'query',
+				prop: 'revisions',
+				rvprop: 'content',
+				rvslots: 'main',
+				formatversion: 2,
+				titles: titles.join('|'),
+			});
+
+			for (let page of response.query.pages) {
+				let title = page.title;
+				let desc = page.revisions?.[0]?.slots?.main?.content;
+				if (title in gadgets) {
+					let gadget = gadgets[title];
+					gadget.li.append(Object.assign(document.createElement("span"), {
+						className: "u-desc",
+						textContent: desc,
+					}));
+				} else {
+					console.warn('Title is missing, different format?', title);
+				}
 			}
 		}
 	}
+
 	/**
 	 * Split array into chunks.
 	 *
