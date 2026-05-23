@@ -45,22 +45,26 @@ if (!window.userNuViewFilterLoaded) {
 // Technique gleaned from [[w:fr:Utilisateur:Od1n/AddLinksGadgetsDefinition.js]].
 // This anchor element is used to generate links and is not attached to the document.
 var link = document.createElement("a");
-function makeLink(href, text) {
+function makeLink({href, text, classList = []}={}) {
 	link.href = href;
 	link.textContent = text;
+	link.className = '';
+	if (classList.length) {
+		link.classList.add(...classList);
+	}
 	return link.outerHTML;
 }
 
-function makeWikilink(page, text) {
-	return makeLink(mw.util.getUrl(page), text || page);
+function makeWikilink({page, text='', classList = []}={}) {
+	return makeLink({href:mw.util.getUrl(page), text: text || page, classList});
 }
 
-function linkGadgetSource(sourcePage) {
-	return makeWikilink("MediaWiki:Gadget-" + sourcePage, sourcePage);
+function linkGadgetSource({name, classList = ['u-gad-src-link']}={}) {
+	return makeWikilink({page:"MediaWiki:Gadget-" + name, text:name, classList});
 }
 
-function linkGadgetAnchor(gadgetName, text) {
-	return makeLink("#" + makeGadgetId(gadgetName), text || gadgetName);
+function linkGadgetAnchor({name, text='', classList = ['u-gad-anchor']}={}) {
+	return makeLink({href:"#" + makeGadgetId(name), text:text || name, classList});
 }
 
 var gadgetNameRegex = /^(\s*)([\w_ -]+)\s*/;
@@ -81,14 +85,18 @@ function processGadgetDefinition(innerHTML) {
 			function (wholeMatch, whitespace, gadgetName) {
 				gadgetName = gadgetName.trim();
 				let codeName = gadgetName.replaceAll(' ', '_');
-				let prefsUrl = makeWikilink("Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), "⚙️");
+				let prefsUrl = makeWikilink({
+					page:"Special:Preferences#mw-input-wpgadget-" + encodeURIComponent(codeName), 
+					text:"⚙️",
+					classList:['u-prefs-link']
+				});
 				return whitespace
-					+ linkGadgetSource(gadgetName)
+					+ linkGadgetSource({name:gadgetName, classList:['u-gad-desc-link']})
 					+ (isHidden ? '' : ` (${prefsUrl})`)
 					+ " "
 				;
 			})
-		.replace(/([\w_\-.]+\.(?:css|js(?:on)?))/g, linkGadgetSource) // link script names
+		.replace(/([\w_\-.]+\.(?:css|js(?:on)?))/g, (a)=>linkGadgetSource({name:a})) // link script names
 		.replace(/\s*\|\s*/g, " | ") // spaces around pipes
 		
 		/*
@@ -114,29 +122,37 @@ function processGadgetDefinition(innerHTML) {
 					case "dependencies":
 						splitValue = splitValue.map(function (dependency) {
 							var gadgetName = /^ext\.gadget\.(.+)$/.exec(dependency);
-							if (gadgetName)
-								return linkGadgetAnchor(gadgetName[1], dependency);
-							else
-								return makeWikilink("mw:ResourceLoader/Core modules#" + dependency, dependency);
+							if (gadgetName) {
+								let classList = ['u-dependency', 'u-gadget'];
+								return linkGadgetAnchor({name:gadgetName[1], text:dependency, classList});
+							}
+							else {
+								let classList = ['u-dependency', 'u-module'];
+								return makeWikilink({page:"mw:ResourceLoader/Core modules#" + dependency, text:dependency, classList});
+							}
 						});
 						break;
 					case "rights":
-						key = makeWikilink("mw:Manual:User_rights#List_of_permissions", key);
+						let classList = ['u-user-right'];
+						key = makeWikilink({page:"mw:Manual:User_rights#List_of_permissions", text:key, classList});
 						break;
 					case "skins": {
-						var skinNames = mw.config.get('wgAvailableSkins');
+						let skinNames = mw.config.get('wgAvailableSkins');
 						if (skinNames) {
 							splitValue = splitValue.map(function (skin) {
+								let classList = ['u-skin'];
 								return skinNames[skin]
-									? makeWikilink("mw:Skin:" + skinNames[skin], skin)
+									? makeWikilink({page:"mw:Skin:" + skinNames[skin], text:skin, classList})
 									: skin;
 							});
 						}
 						break;
 					}
-					case "peers":
-						splitValue = splitValue.map(linkGadgetAnchor);
-					
+					case "peers":{
+						// light deps see: https://www.mediawiki.org/wiki/Extension:Gadgets#Options
+						let classList = ['u-peer', 'u-gadget']
+						splitValue = splitValue.map((v)=>linkGadgetAnchor({name:v, classList}));
+					}
 				}
 				return key + " = " + splitValue.join(", ");
 			});
