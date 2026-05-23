@@ -14,11 +14,12 @@ import { addConfig } from './wikiploy-common.mjs';
 (async () => {
 	const configs = [];
 
-    // https://meta.wikimedia.org/w/index.php?title=User:Nux/gadgets-definition-ux.js&action=history
+	// https://meta.wikimedia.org/w/index.php?title=User:Nux/gadgets-definition-ux.js&action=history
 	addConfig(configs, 'meta.wikimedia.org');
 
 	// custom summary
-	let summary = 'change from Github'; // default
+	// let summary = 'change from Github'; // default
+	let summary = 'load actual descriptions'; // default
 	let version = '';
 	await setupSummary(ployBot, version, summary); // get from cli
 

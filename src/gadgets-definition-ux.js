@@ -30,11 +30,24 @@
 					padding: 0.1em 0.3em;
 					background-color: #eee;
 				}
+				
+				.u-desc {
+					display: block;
+					font-size: 90%;
+				}
+			}
+			#gad-def-filter-container {
+				padding-top: .2em;
 			}
 			#gad-def-action-container,
 			#gad-def-filter-container {
 				display: flex;
 				gap: .4em;
+				float: left;
+				margin-right: 1em;
+			}
+			#mw-content-text ul {
+				clear: both;
 			}
 
 			#gad-def-action-container {
@@ -281,7 +294,8 @@
 			try {
 				let list = Array.from(document.querySelectorAll('li:has(.u-gad-desc-link)'));
 				for (let li of list) {
-					let title = li.querySelectorAll('.u-gad-desc-link').href.replace(/.+\/wiki\//, '');
+					let title = li.querySelector('.u-gad-desc-link').href.replace(/.+\/wiki\//, '');
+					title = this.normalizeTitle(title);
 					gadgets[title] = {
 						title: title,
 						id: li.id,
@@ -335,18 +349,23 @@
 			});
 
 			for (let page of response.query.pages) {
-				let title = page.title;
+				let title = this.normalizeTitle(page.title);
 				let desc = page.revisions?.[0]?.slots?.main?.content;
 				if (title in gadgets) {
 					let gadget = gadgets[title];
-					gadget.li.append(Object.assign(document.createElement("span"), {
+					$(".u-desc", gadget.li).remove();
+					gadget.li.append(Object.assign(document.createElement("code"), {
 						className: "u-desc",
 						textContent: desc,
 					}));
 				} else {
-					console.warn('Title is missing, different format?', title);
+					console.warn('Title is missing, different format?', title, titles);
 				}
 			}
+		}
+
+		normalizeTitle(title) {
+			return title.trim().replaceAll(' ',  '_');
 		}
 	}
 
