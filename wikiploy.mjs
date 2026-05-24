@@ -8,13 +8,13 @@ import * as botpass from './bot.config.mjs';
 const ployBot = new Wikiploy(botpass);
 
 // common deploy function(s)
-import { addConfig } from './wikiploy-common.mjs';
+import { addConfig, addConfigRelease } from './wikiploy-common.mjs';
 
 // run asynchronously to be able to wait for results
 (async () => {
 	const configs = [];
 
-    // https://meta.wikimedia.org/w/index.php?title=User:Nux/gadgets-definition-ux.js&action=history
+	// https://meta.wikimedia.org/w/index.php?title=User:Nux/gadgets-definition-ux.js&action=history
 	addConfig(configs, 'meta.wikimedia.org');
 	addConfigRelease(configs, 'meta.wikimedia.org');
 
