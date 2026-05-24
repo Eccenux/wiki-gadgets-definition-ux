@@ -1,25 +1,25 @@
 # mw-gadgets-definition-ux
 
-UX of the [[MediaWiki:Gadgets-definition|Gadgets-definition]].
+UX of the [[MediaWiki:Gadgets-definition]].
 
 Adds links to:
 
-- gadget description;
-- link to preferences;
+- gadget descriptions;
+- preferences (⚙️);
 - dependencies;
-- scripts and styles of the gadget.
+- scripts and styles used by the gadget.
 
-Additionally you have the ability to:
+Additionally, you can:
 
 - filter lists of definitions:
-	- you can find all gadgets using `oojs`
-	- also filter in reverse (e.g. find not `hidden`)
-	- can use regexp for filtering
-	- keeps headers (only hides list)
+	- find all gadgets using `oojs`;
+	- filter in reverse (e.g. find everything except `hidden`);
+	- use regular expressions for filtering;
+	- keeps section headers visible (only the list is hidden).
 - load and filter by actual descriptions:
-	- there is a button to load descriptions
-	- upon click descriptions are added to a page
-	- updates filter so you can find gadget by human-descriptions
+	- there is a button to load descriptions;
+	- upon clicking, descriptions are added to the page;
+	- filtering is updated so you can find gadgets by human-readable descriptions (e.g. by display names).
 
 **Installation**:
 1. Open and edit: https://meta.wikimedia.org/wiki/Special:MyPage/global.js
