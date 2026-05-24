@@ -94,4 +94,6 @@ node wikiploy.mjs
 
 ## License
 
-MIT, Maciej Nux Jaros, Erutuon.
+Maciej Nux Jaros, Erutuon.
+
+[CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/)
