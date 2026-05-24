@@ -21,6 +21,19 @@ Additionally you have the ability to:
 	- upon click descriptions are added to a page
 	- updates filter so you can find gadget by human-descriptions
 
+**Installation**:
+1. Open and edit: https://meta.wikimedia.org/wiki/Special:MyPage/global.js
+2. Add:
+```js
+// [[:en:Wikipedia:Gadgets-definition UX]]
+// [[:pl:Wikipedia:Narzędzia/Gadgets-definition UX]]
+mw.loader.load( 'https://meta.wikimedia.org/w/index.php?title=MediaWiki:Gadgets-definition-ux.js&action=raw&ctype=text/javascript' );
+```
+
+**Documentation and usage information**:
+- English: https://en.wikipedia.org/wiki/Wikipedia:Gadgets-definition_UX
+- Polish (*polski*): https://pl.wikipedia.org/wiki/Wikipedia:Narz%C4%99dzia/Gadgets-definition_UX
+
 ## Table of contents
 
 <!-- TOC -->

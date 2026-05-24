@@ -6,7 +6,8 @@
 		"deploy": "node wikiploy.mjs",
 		"lint": "npx eslint"
 	},
-	"author": "Maciej Nux",
+	"author": "Maciej Nux, User:Erutuon",
+	"license": "CC-BY-SA-4.0",
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"eslint": "^10.0.1",
