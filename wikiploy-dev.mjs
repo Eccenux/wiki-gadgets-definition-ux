@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
+
 /**
  * Dev/staging deploy.
  */
 
-import {DeployConfig, Wikiploy, setupSummary } from 'wikiploy';
+import { DeployConfig, Wikiploy, setupSummary } from 'wikiploy';
 
 import * as botpass from './bot.config.mjs';
 const ployBot = new Wikiploy(botpass);

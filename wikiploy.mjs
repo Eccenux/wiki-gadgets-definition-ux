@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
+
 /**
- * Deploy to all.
+ * Deploy to all (dev, release).
  */
-import {DeployConfig, Wikiploy, setupSummary } from 'wikiploy';
+
+import { DeployConfig, Wikiploy, setupSummary } from 'wikiploy';
 
 import * as botpass from './bot.config.mjs';
 const ployBot = new Wikiploy(botpass);
@@ -14,8 +16,14 @@ import { addConfig, addConfigRelease } from './wikiploy-common.mjs';
 (async () => {
 	const configs = [];
 
-	// https://meta.wikimedia.org/w/index.php?title=User:Nux/gadgets-definition-ux.js&action=history
+	/*
+		dev/release diff:
+		https://meta.wikimedia.org/wiki/Special:ComparePages?page1=MediaWiki%3AGadgets-definition-ux.js&rev1=&page2=User%3ANux%2Fgadgets-definition-ux.js&rev2=&action=&unhide=
+	*/
+
+	// dev:
 	addConfig(configs, 'meta.wikimedia.org');
+	// release:
 	addConfigRelease(configs, 'meta.wikimedia.org');
 
 	// custom summary
