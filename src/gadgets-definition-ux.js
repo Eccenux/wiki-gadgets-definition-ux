@@ -278,7 +278,8 @@
 				let gadgets = await this.readGadgets();
 				await this.loadToGadgets(gadgets);
 
-				// TODO: update filter after load
+				// update filter
+				if (listFilter) listFilter.preParseItems();
 
 			} finally {
 				button.classList.remove('loading');
